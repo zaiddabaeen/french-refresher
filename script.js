@@ -84,10 +84,8 @@ function checkAnswer() {
   const userAnswer = answerInput.value.trim().toLowerCase();
   let correctAnswer = currentWord.english.toLowerCase();
 
-  // Remove gender specifications from the correct answer
-  correctAnswer = correctAnswer
-    .replace(/\(masculine\)|\(feminine\)|\(plural\)|\(formal\)/g, "")
-    .trim();
+  // Remove anything in parentheses and trim
+  correctAnswer = correctAnswer.replace(/\([^)]*\)/g, "").trim();
 
   // Split multiple correct answers by comma
   const correctAnswers = correctAnswer.split(",").map((ans) => ans.trim());
