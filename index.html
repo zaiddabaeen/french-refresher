@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>French Vocabulary Learning Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>French Vocabulary Learning Game</h1>
+            <div class="category-tabs">
+                <button class="tab-btn active" data-category="verbs">Verbs</button>
+                <button class="tab-btn" data-category="nouns">Nouns</button>
+                <button class="tab-btn" data-category="adjectives">Adjectives</button>
+                <button class="tab-btn" data-category="adverbs">Adverbs</button>
+                <button class="tab-btn" data-category="pronouns">Pronouns</button>
+                <button class="tab-btn" data-category="prepositions">Prepositions</button>
+                <button class="tab-btn" data-category="conjugation">Conjugation</button>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <span id="progress-text">0/20</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="game-card" id="vocabulary-card">
+                <div class="word-container">
+                    <h2 id="french-word">Loading...</h2>
+                    <p class="word-number" id="word-number">Word 1 of 20</p>
+                </div>
+
+                <div class="answer-container">
+                    <input type="text" id="answer-input" placeholder="Type the English meaning..." autocomplete="off">
+                    <button id="submit-btn">Submit</button>
+                    <button id="reveal-btn">Reveal Answer</button>
+                </div>
+
+                <div class="feedback-container">
+                    <p id="feedback-message"></p>
+                    <p id="correct-answer" class="hidden"></p>
+                </div>
+            </div>
+
+            <div class="game-card hidden" id="conjugation-card">
+                <div class="conjugation-container">
+                    <h2 id="conjugation-verb">Loading...</h2>
+                    <div class="tense-selector">
+                        <button class="tense-btn active" data-tense="present">Present</button>
+                        <button class="tense-btn" data-tense="imparfait">Imparfait</button>
+                        <button class="tense-btn" data-tense="futur">Futur</button>
+                    </div>
+                    <div class="conjugation-grid">
+                        <div class="conjugation-row">
+                            <span class="pronoun">je</span>
+                            <input type="text" class="conjugation-input" data-pronoun="je">
+                        </div>
+                        <div class="conjugation-row">
+                            <span class="pronoun">tu</span>
+                            <input type="text" class="conjugation-input" data-pronoun="tu">
+                        </div>
+                        <div class="conjugation-row">
+                            <span class="pronoun">il/elle/on</span>
+                            <input type="text" class="conjugation-input" data-pronoun="il/elle/on">
+                        </div>
+                        <div class="conjugation-row">
+                            <span class="pronoun">nous</span>
+                            <input type="text" class="conjugation-input" data-pronoun="nous">
+                        </div>
+                        <div class="conjugation-row">
+                            <span class="pronoun">vous</span>
+                            <input type="text" class="conjugation-input" data-pronoun="vous">
+                        </div>
+                        <div class="conjugation-row">
+                            <span class="pronoun">ils/elles</span>
+                            <input type="text" class="conjugation-input" data-pronoun="ils/elles">
+                        </div>
+                    </div>
+                    <button id="check-conjugation-btn">Check Answers</button>
+                    <button id="reveal-conjugation-btn">Reveal Answers</button>
+                </div>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat">
+                    <span class="stat-label">Correct:</span>
+                    <span id="correct-count">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Incorrect:</span>
+                    <span id="incorrect-count">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Accuracy:</span>
+                    <span id="accuracy">0%</span>
+                </div>
+            </div>
+        </main>
+
+        <div class="word-log">
+            <h3>Word History</h3>
+            <div id="wordHistory"></div>
+        </div>
+    </div>
+    <script src="words.js"></script>
+    <script src="conjugation.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
