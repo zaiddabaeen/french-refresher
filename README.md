@@ -29,6 +29,14 @@ To run the game locally:
 1. Clone the repository
 2. Open `index.html` in your web browser
 
+For local development and testing, it's recommended to use Python's built-in HTTP server to avoid CORS issues:
+
+```bash
+python3 -m http.server
+```
+
+Then open `http://localhost:8000` in your web browser.
+
 ## Technologies Used
 
 - HTML5
