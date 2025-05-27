@@ -42,28 +42,37 @@ const customLoading = document.getElementById("custom-loading");
 const customError = document.getElementById("custom-error");
 const errorMessage = customError.querySelector(".error-message");
 
+// Chat elements
+const chatCard = document.getElementById("chat-card");
+const chatMessages = document.getElementById("chat-messages");
+const chatInput = document.getElementById("chat-input");
+const sendChatBtn = document.getElementById("send-chat-btn");
+const chatLoading = document.getElementById("chat-loading");
+
 // Initialize LanguageModel session
-async function getLanguageModel() {
+async function getLanguageModel(options) {
   try {
     const availablility = await LanguageModel.availability();
     if (availablility === "no") {
       throw new Error("LanguageModel is not available");
     }
-    const model = await await LanguageModel.create({
-      monitor(m) {
-        m.addEventListener("downloadprogress", (e) => {
-          console.log(`Downloaded ${e.loaded} of ${e.total} bytes.`);
-          customLoading.textContent = `Downloading model: ${Math.round(
-            (e.loaded / e.total) * 100
-          )}%`;
-        });
-      },
-    });
+
+    if (options === undefined) {
+      options = {};
+    }
+    options.monitor = (m) => {
+      m.addEventListener("downloadprogress", (e) => {
+        console.log(`Downloaded ${e.loaded} of ${e.total} bytes.`);
+        customLoading.textContent = `Downloading model: ${Math.round(
+          (e.loaded / e.total) * 100
+        )}%`;
+      });
+    };
+    const model = await await LanguageModel.create(options);
     console.log("LanguageModel initialized successfully");
     return model;
   } catch (error) {
     console.error("Failed to initialize LanguageModel:", error);
-    customLoading.textContent = error.message;
     throw new Error(
       "Failed to initialize the language model. Please try again."
     );
@@ -202,15 +211,23 @@ function handleCategoryChange(category) {
     vocabularyCard.classList.add("hidden");
     conjugationCard.classList.remove("hidden");
     customCard.classList.add("hidden");
+    chatCard.classList.add("hidden");
     initConjugationPractice();
   } else if (category === "custom") {
     vocabularyCard.classList.add("hidden");
     conjugationCard.classList.add("hidden");
     customCard.classList.remove("hidden");
+    chatCard.classList.add("hidden");
+  } else if (category === "chat") {
+    vocabularyCard.classList.add("hidden");
+    conjugationCard.classList.add("hidden");
+    customCard.classList.add("hidden");
+    chatCard.classList.remove("hidden");
   } else {
     vocabularyCard.classList.remove("hidden");
     conjugationCard.classList.add("hidden");
     customCard.classList.add("hidden");
+    chatCard.classList.add("hidden");
     // Reset and start new game with selected category
     shuffledWords = [...wordCategories[currentCategory]].sort(
       () => Math.random() - 0.5
@@ -403,6 +420,79 @@ categoryInput.addEventListener("keypress", (e) => {
     if (category) {
       generateCustomVocabulary(category);
     }
+  }
+});
+
+// Add message to chat
+function addMessage(message, isTeacher = false) {
+  const messageDiv = document.createElement("div");
+  messageDiv.className = `message ${isTeacher ? "teacher" : "student"}`;
+
+  // Convert markdown to HTML if it's a teacher message
+  const content = isTeacher ? marked.parse(message) : message;
+  messageDiv.innerHTML = `<p>${content}</p>`;
+
+  // Add styling for markdown elements
+  const markdownElements = messageDiv.querySelectorAll(
+    "code, pre, strong, em, ul, ol, li"
+  );
+  markdownElements.forEach((element) => {
+    element.classList.add("markdown-element");
+  });
+
+  chatMessages.appendChild(messageDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+let chatSession;
+// Handle chat message
+async function handleChatMessage() {
+  const message = chatInput.value.trim();
+  if (!message) return;
+
+  // Add user message to chat
+  addMessage(message, false);
+  chatInput.value = "";
+
+  try {
+    chatLoading.classList.remove("hidden");
+    if (!chatSession) {
+      chatSession = await getLanguageModel({
+        initialPrompts: [
+          {
+            role: "system",
+            content: `You are a French language teacher. You will receive messages from a student.
+            If the message is in English, respond in French and explain the translation.
+      If the message is in French, correct any mistakes and explain the corrections.
+      If the message is a question, answer it in French and provide an English translation.
+      Keep your responses concise and educational.`,
+          },
+        ],
+      });
+    }
+
+    const response = await chatSession.prompt(message);
+
+    console.log(response);
+    if (!response) {
+      throw new Error("Failed to get response from teacher");
+    }
+
+    // Add teacher's response to chat
+    addMessage(response, true);
+  } catch (error) {
+    console.error("Error in chat:", error);
+    addMessage("I'm sorry, I encountered an error. Please try again.", true);
+  } finally {
+    chatLoading.classList.add("hidden");
+  }
+}
+
+// Event listeners for chat
+sendChatBtn.addEventListener("click", handleChatMessage);
+chatInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    handleChatMessage();
   }
 });
 

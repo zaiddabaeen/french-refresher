@@ -19,6 +19,7 @@
                 <button class="tab-btn" data-category="prepositions">Prepositions</button>
                 <button class="tab-btn" data-category="conjugation">Conjugation</button>
                 <button class="tab-btn" data-category="custom">Custom</button>
+                <button class="tab-btn" data-category="chat">Chat</button>
             </div>
             <div class="progress-container">
                 <div class="progress-bar">
@@ -102,6 +103,24 @@
                 </div>
             </div>
 
+            <div class="game-card hidden" id="chat-card">
+                <div class="chat-container">
+                    <h2>Chat with French Teacher</h2>
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message teacher">
+                            <p>Bonjour! I'm your French teacher. Let's practice French together. You can ask me questions or respond to my prompts. I'll help you learn and improve your French!</p>
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" id="chat-input" placeholder="Type your message here..." />
+                        <button id="send-chat-btn">Send</button>
+                    </div>
+                    <div id="chat-loading" class="hidden">
+                        <p>Teacher is typing...</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="stats-container">
                 <div class="stat">
                     <span class="stat-label">Correct:</span>
@@ -125,6 +144,7 @@
     </div>
     <script src="words.js"></script>
     <script src="conjugation.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script type="module" src="script.js"></script>
 </body>
 </html> 
